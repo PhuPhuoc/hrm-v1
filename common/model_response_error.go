@@ -1,0 +1,101 @@
+package common
+
+import (
+	"fmt"
+	"net/http"
+	"strings"
+)
+
+type error_response struct {
+	StatusCode int    `json:"status-code"`
+	Message    string `json:"message"`
+	Log        string `json:"log"`
+}
+
+func ErrorResponse_NewFull(status int, mess string, e error) *error_response {
+	return &error_response{
+		StatusCode: status,
+		Message:    mess,
+		Log:        e.Error(),
+	}
+}
+
+func ErrorResponse_NoPermission(e error) *error_response {
+	return &error_response{
+		StatusCode: http.StatusForbidden, // 403
+		Message:    "You have no permission",
+		Log:        e.Error(),
+	}
+}
+
+func ErrorResponse_Unauthorized(e error) *error_response {
+	return &error_response{
+		StatusCode: http.StatusUnauthorized, // 401
+		Message:    "You have no permission",
+		Log:        e.Error(),
+	}
+}
+
+func ErrorResponse_BadRequest(mess string, e error) *error_response {
+	return &error_response{
+		StatusCode: http.StatusBadRequest,
+		Message:    mess,
+		Log:        e.Error(),
+	}
+}
+
+func ErrorResponse_InvalidRequest(e error) *error_response {
+	return &error_response{
+		StatusCode: http.StatusBadRequest,
+		Message:    "invalid request",
+		Log:        e.Error(),
+	}
+}
+
+func ErrorResponse_Server(e error) *error_response {
+	return &error_response{
+		StatusCode: http.StatusInternalServerError,
+		Message:    "something went wrong with server",
+		Log:        e.Error(),
+	}
+}
+
+func ErrorResponse_DB(e error) *error_response {
+	return &error_response{
+		StatusCode: http.StatusInternalServerError,
+		Message:    "something went wrong with DB",
+		Log:        e.Error(),
+	}
+}
+
+func ErrorResponse_CannotListEntity(entity string, e error) *error_response {
+	return &error_response{
+		StatusCode: http.StatusBadRequest,
+		Message:    fmt.Sprintf("Cannot list %s", strings.ToLower(entity)),
+		Log:        e.Error(),
+	}
+}
+
+func ErrorResponse_CannotGetEntity(entity string, e error) *error_response {
+	return &error_response{
+		StatusCode: http.StatusBadRequest,
+		Message:    fmt.Sprintf("Cannot get %s", strings.ToLower(entity)),
+		Log:        e.Error(),
+	}
+}
+
+func ErrorResponse_CannotUpdateEntity(entity string, e error) *error_response {
+	return &error_response{
+		StatusCode: http.StatusBadRequest,
+		Message:    fmt.Sprintf("Cannot update %s", strings.ToLower(entity)),
+		Log:        e.Error(),
+	}
+}
+
+func ErrorResponse_CannotDeleteEntity(entity string, e error) *error_response {
+	return &error_response{
+		StatusCode: http.StatusBadRequest,
+		Message:    fmt.Sprintf("Cannot delete %s", strings.ToLower(entity)),
+		Log:        e.Error(),
+	}
+}
