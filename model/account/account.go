@@ -8,6 +8,5 @@ type Account struct {
 	LastName     string    `json:"last_name"`
 	Email        string    `json:"email"`
 	PasswordHash string    `json:"-"`
-	CreatedTime  time.Time `json:"created_time"`
-	UpdatedTime  time.Time `json:"updated_time"`
+	CreatedTime  time.Time `json:"-"`
 }
