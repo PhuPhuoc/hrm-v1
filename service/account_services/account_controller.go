@@ -30,10 +30,11 @@ func (c *accountController) RegisterAccountRouter(r *mux.Router) {
 func (c *accountController) handleAccountRegister(rw http.ResponseWriter, req *http.Request) {
 	payload := new(account.Account_Register)
 	registration := account.Account_Register{}
-
-	// read req.body into bodyData to check valid
-	// => when server read req.body 1 time, it will clear the data in req.body
-	// => so it need to save a data into a variable to handle other later
+	/*
+		todo: read req.body into bodyData to check valid
+		* when server read req.body 1 time, it will clear the data in req.body
+		* it need to save a data into a variable to handle other later
+	*/
 	var bodyData bytes.Buffer
 	_, err := bodyData.ReadFrom(req.Body)
 	if err != nil {
