@@ -32,8 +32,8 @@ func (c *accountController) handleAccountRegister(rw http.ResponseWriter, req *h
 	registration := account.Account_Register{}
 	/*
 		todo: read req.body into bodyData to check valid
-		* when server read req.body 1 time, it will clear the data in req.body
-		* it need to save a data into a variable to handle other later
+		? when server read req.body 1 time, it will clear the data in req.body
+		? it need to save a data into a variable to handle other later
 	*/
 	var bodyData bytes.Buffer
 	_, err := bodyData.ReadFrom(req.Body)
