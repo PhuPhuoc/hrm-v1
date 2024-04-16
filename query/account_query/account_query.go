@@ -7,5 +7,5 @@ func QueryCheckAccountExistByEmail() string {
 }
 
 func QueryCreateNewAccount() string {
-	return `insert into accounts(first_name, last_name, email, password_hash, created_time) values ($1,$2,$3,$4,$5)`
+	return `insert into accounts(first_name, last_name, email, password_hash, account_role, created_time) values ($1,$2,$3,$4,$5,$6)`
 }

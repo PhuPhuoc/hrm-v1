@@ -33,7 +33,7 @@ func createDateTimeCurrentFormated() string {
 func (store *accountStore) CreateAccount(acc *account.Account_Register) error {
 	pwd_hash := common.GenerateHash(acc.Password)
 	query := accountquery.QueryCreateNewAccount()
-	result, err := store.db.Exec(query, acc.FirstName, acc.LastName, acc.Email, pwd_hash, createDateTimeCurrentFormated())
+	result, err := store.db.Exec(query, acc.FirstName, acc.LastName, acc.Email, pwd_hash, acc.AccountRole, createDateTimeCurrentFormated())
 	if err != nil {
 		return fmt.Errorf("error when CreateAccount in store: %v", err)
 	}

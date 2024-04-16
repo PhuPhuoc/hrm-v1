@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/PhuPhuoc/hrm-v1/middleware"
 	acc_sv "github.com/PhuPhuoc/hrm-v1/service/account_services"
 	"github.com/gorilla/mux"
 )
@@ -24,6 +25,8 @@ func NewServer(addr string, db *sql.DB) *Server {
 
 func (sv *Server) Run() error {
 	router := mux.NewRouter()
+
+	router.Use(middleware.LoggingMiddleware)
 
 	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "Welcome to the server: HRM-v1")
