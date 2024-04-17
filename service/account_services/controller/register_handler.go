@@ -1,4 +1,4 @@
-package accountservices
+package controller
 
 import (
 	"bytes"
@@ -8,24 +8,7 @@ import (
 
 	"github.com/PhuPhuoc/hrm-v1/common"
 	"github.com/PhuPhuoc/hrm-v1/model/account"
-	"github.com/gorilla/mux"
 )
-
-type accountController struct {
-	store account.AccountStore
-}
-
-func NewAccooutController(s account.AccountStore) *accountController {
-	return &accountController{
-		store: s,
-	}
-}
-
-func (c *accountController) RegisterAccountRouter(r *mux.Router) {
-	r.HandleFunc("/register", c.handleAccountRegister).Methods("POST")
-	r.HandleFunc("/login", c.handleAccountLogin).Methods("POST")
-
-}
 
 func (c *accountController) handleAccountRegister(rw http.ResponseWriter, req *http.Request) {
 	payload := new(account.Account_Register)
@@ -68,8 +51,4 @@ func (c *accountController) handleAccountRegister(rw http.ResponseWriter, req *h
 		return
 	}
 	common.WriteJSON(rw, common.SuccessResponse_Message("New account registration successful"))
-}
-
-func (c *accountController) handleAccountLogin(rw http.ResponseWriter, req *http.Request) {
-
 }

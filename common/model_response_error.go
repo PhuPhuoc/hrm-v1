@@ -12,11 +12,21 @@ type error_response struct {
 	Log        string `json:"log"`
 }
 
+func validate_nil_err(e error) string {
+	var log string
+	if e == nil {
+		log = ""
+	} else {
+		log = e.Error()
+	}
+	return log
+}
+
 func ErrorResponse_NewFull(status int, mess string, e error) *error_response {
 	return &error_response{
 		StatusCode: status,
 		Message:    mess,
-		Log:        e.Error(),
+		Log:        validate_nil_err(e),
 	}
 }
 
@@ -40,7 +50,7 @@ func ErrorResponse_BadRequest(mess string, e error) *error_response {
 	return &error_response{
 		StatusCode: http.StatusBadRequest,
 		Message:    mess,
-		Log:        e.Error(),
+		Log:        validate_nil_err(e),
 	}
 }
 
@@ -48,7 +58,7 @@ func ErrorResponse_InvalidRequest(e error) *error_response {
 	return &error_response{
 		StatusCode: http.StatusBadRequest,
 		Message:    "invalid request",
-		Log:        e.Error(),
+		Log:        validate_nil_err(e),
 	}
 }
 

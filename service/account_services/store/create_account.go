@@ -1,7 +1,6 @@
-package accountservices
+package store
 
 import (
-	"database/sql"
 	"fmt"
 	"time"
 
@@ -9,16 +8,6 @@ import (
 	"github.com/PhuPhuoc/hrm-v1/model/account"
 	accountquery "github.com/PhuPhuoc/hrm-v1/query/account_query"
 )
-
-type accountStore struct {
-	db *sql.DB
-}
-
-func NewAccountStore(db *sql.DB) *accountStore {
-	return &accountStore{
-		db: db,
-	}
-}
 
 func createDateTimeCurrentFormated() string {
 
@@ -46,30 +35,4 @@ func (store *accountStore) CreateAccount(acc *account.Account_Register) error {
 	} else {
 		return fmt.Errorf("error when CreateAccount in store (No user created): %v", err)
 	}
-}
-
-func (store *accountStore) CheckAccountExistByEmail(email string) (bool, error) {
-	query_str := accountquery.QueryCheckAccountExistByEmail()
-	rows, err := store.db.Query(query_str, email)
-	if err != nil {
-		return true, fmt.Errorf("error when CheckAccountExistByEmail in store: %v", err)
-	}
-	if rows.Next() {
-		return true, nil
-	}
-	return false, nil
-}
-
-func (store *accountStore) LoginAccount(email, pwd string) (*account.Account, error) {
-	return &account.Account{}, nil
-}
-
-func scanRowIntoObjectAccout(row *sql.Row) (*account.Account, error) {
-	obj := new(account.Account)
-
-	err := row.Scan(&obj.Id, &obj.FirstName, &obj.LastName, &obj.Email, &obj.PasswordHash, &obj.CreatedTime)
-	if err != nil {
-		return nil, err
-	}
-	return obj, nil
 }

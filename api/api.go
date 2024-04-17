@@ -7,7 +7,8 @@ import (
 	"net/http"
 
 	"github.com/PhuPhuoc/hrm-v1/middleware"
-	acc_sv "github.com/PhuPhuoc/hrm-v1/service/account_services"
+	acc_ctl "github.com/PhuPhuoc/hrm-v1/service/account_services/controller"
+	acc_store "github.com/PhuPhuoc/hrm-v1/service/account_services/store"
 	"github.com/gorilla/mux"
 )
 
@@ -35,10 +36,9 @@ func (sv *Server) Run() error {
 	subrouter := router.PathPrefix("/api/v1").Subrouter()
 
 	/* account */
-	acc_store := acc_sv.NewAccountStore(sv.db)
-	acc_ctl := acc_sv.NewAccooutController(acc_store)
-	acc_ctl.RegisterAccountRouter(subrouter)
-	/* === */
+	account_store := acc_store.NewAccountStore(sv.db)
+	account_controller := acc_ctl.NewAccooutController(account_store)
+	account_controller.RegisterAccountRouter(subrouter)
 
 	log.Printf("<<>> database has connected successfully & the server is listening at port %v", sv.address)
 

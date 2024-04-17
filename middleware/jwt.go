@@ -1,4 +1,4 @@
-package common
+package middleware
 
 import (
 	"crypto/hmac"
@@ -8,7 +8,11 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strings"
+
+	"github.com/PhuPhuoc/hrm-v1/common"
+	"github.com/joho/godotenv"
 )
 
 type JWT struct {
@@ -29,7 +33,14 @@ func computeSignature(header, payload, secret string) string {
 	return base64.URLEncoding.EncodeToString(h.Sum(nil))
 }
 
-func CreateJWT(payload map[string]interface{}, secret string) (string, error) {
+func CreateJWT(payload map[string]interface{}) (string, error) {
+
+	err_env := godotenv.Load(".env")
+	if err_env != nil {
+		log.Fatal("(From jwt_create) Error loading .env file:", err_env)
+	}
+	secret := os.Getenv("SECRET_KEY")
+
 	header := map[string]interface{}{
 		"alg": "HS256",
 		"typ": "JWT",
@@ -43,7 +54,14 @@ func CreateJWT(payload map[string]interface{}, secret string) (string, error) {
 	return strings.Join([]string{encodedHeader, encodedPayload, signature}, "."), nil
 }
 
-func verifyJWT(token, secret string) (map[string]interface{}, error) {
+func verifyJWT(token string) (map[string]interface{}, error) {
+
+	err_env := godotenv.Load(".env")
+	if err_env != nil {
+		log.Fatal("(From jwt_verify) Error loading .env file:", err_env)
+	}
+	secret := os.Getenv("SECRET_KEY")
+
 	parts := strings.Split(token, ".")
 	if len(parts) != 3 {
 		return nil, fmt.Errorf("invalid token format")
@@ -75,14 +93,14 @@ func ValidateTokenFromRequest(handlerFunc http.HandlerFunc) http.HandlerFunc {
 		authHeader := r.Header.Get("Authorization")
 
 		if !strings.HasPrefix(authHeader, "Bearer ") {
-			WriteJSON(rw, ErrorResponse_Unauthorized())
+			common.WriteJSON(rw, common.ErrorResponse_Unauthorized())
 		}
 
 		tokenString := strings.TrimPrefix(authHeader, "Bearer ")
 
-		_, err := verifyJWT(tokenString, "hehelalamama")
+		_, err := verifyJWT(tokenString)
 		if err != nil {
-			WriteJSON(rw, ErrorResponse_Unauthorized())
+			common.WriteJSON(rw, common.ErrorResponse_Unauthorized())
 		}
 		handlerFunc(rw, r)
 	}
