@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/PhuPhuoc/hrm-v1/common"
 	"github.com/joho/godotenv"
@@ -85,23 +86,49 @@ func verifyJWT(token string) (map[string]interface{}, error) {
 	return payload, nil
 }
 
-func ValidateTokenFromRequest(handlerFunc http.HandlerFunc) http.HandlerFunc {
-	log.Printf("calling this middleware when router is called...")
+func ValidateTokenMiddleware(next http.Handler) http.Handler {
+	excludedURIs := map[string]bool{
+		"/api/v1/register": true,
+		"/api/v1/login":    true,
+	}
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if excludedURIs[r.URL.Path] {
+			next.ServeHTTP(w, r)
+			return
+		}
 
-	return func(rw http.ResponseWriter, r *http.Request) {
-		log.Printf("calling JWT auth middleware...")
 		authHeader := r.Header.Get("Authorization")
 
 		if !strings.HasPrefix(authHeader, "Bearer ") {
-			common.WriteJSON(rw, common.ErrorResponse_Unauthorized())
+			common.WriteJSON(w, common.ErrorResponse_Unauthorized())
+			return
 		}
 
 		tokenString := strings.TrimPrefix(authHeader, "Bearer ")
 
-		_, err := verifyJWT(tokenString)
+		token_payload, err := verifyJWT(tokenString)
 		if err != nil {
-			common.WriteJSON(rw, common.ErrorResponse_Unauthorized())
+			common.WriteJSON(w, common.ErrorResponse_Unauthorized())
+			return
 		}
-		handlerFunc(rw, r)
-	}
+
+		if value, ok := token_payload["exp_date"]; ok {
+			currentUnixTime := time.Now().Unix()
+			expDateFloat, ok_int := value.(float64)
+			if !ok_int {
+				common.WriteJSON(w, common.ErrorResponse_Unauthorized())
+				return
+			}
+			expDateUnix := int64(expDateFloat)
+			if currentUnixTime < expDateUnix {
+				next.ServeHTTP(w, r)
+			} else {
+				common.WriteJSON(w, common.ErrorResponse_TokenExpired())
+				return
+			}
+		} else {
+			common.WriteJSON(w, common.ErrorResponse_Unauthorized())
+			return
+		}
+	})
 }

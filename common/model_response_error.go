@@ -46,6 +46,14 @@ func ErrorResponse_Unauthorized() *error_response {
 	}
 }
 
+func ErrorResponse_TokenExpired() *error_response {
+	return &error_response{
+		StatusCode: http.StatusUnauthorized, // 401
+		Message:    "You have no permission",
+		Log:        "Token expired, please login again",
+	}
+}
+
 func ErrorResponse_BadRequest(mess string, e error) *error_response {
 	return &error_response{
 		StatusCode: http.StatusBadRequest,

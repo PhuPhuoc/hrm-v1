@@ -2,7 +2,7 @@ package api
 
 import (
 	"database/sql"
-	"fmt"
+	"encoding/json"
 	"log"
 	"net/http"
 
@@ -27,11 +27,13 @@ func NewServer(addr string, db *sql.DB) *Server {
 func (sv *Server) Run() error {
 	router := mux.NewRouter()
 
-	router.Use(middleware.LoggingMiddleware)
+	router.Use(middleware.LoggingMiddleware, middleware.ValidateTokenMiddleware)
 
 	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprint(w, "Welcome to the server: HRM-v1")
-	})
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(map[string]string{"message": "Welcome to the server: HRM-v1"})
+	}).Methods("GET")
 
 	subrouter := router.PathPrefix("/api/v1").Subrouter()
 
