@@ -11,15 +11,15 @@ import (
 	"github.com/PhuPhuoc/hrm-v1/model/account"
 )
 
-//	@Summary		login to account
-//	@Description	Log in to the account with email and password
-//	@Tags			Account
-//	@Accept			json
-//	@Produce		json
-//	@Param			request	body		account.RequestLogin	true	"Login request"
-//	@Success		200		{object}	common.success_response	"Successful login"
-//	@Failure		400		{object}	common.error_response	"login failure"
-//	@Router			/api/v1/login [post]
+// @Summary		login to account
+// @Description	Log in to the account with email and password
+// @Tags			Account
+// @Accept			json
+// @Produce		json
+// @Param			request	body		account.RequestLogin	true	"Login request"
+// @Success		200		{object}	common.success_response	"Successful login"
+// @Failure		400		{object}	common.error_response	"login failure"
+// @Router			/api/v1/login [post]
 func (c *accountController) handleAccountLogin(rw http.ResponseWriter, req *http.Request) {
 	payload := new(account.RequestLogin)
 	acc := new(account.Account)
@@ -59,6 +59,7 @@ func (c *accountController) handleAccountLogin(rw http.ResponseWriter, req *http
 
 	payload_jwt := map[string]interface{}{
 		"id":        acc.Id,
+		"role":      acc.AccountRole,
 		"user_name": acc.LastName + " " + acc.FirstName,
 		"exp_date":  expUnix,
 	}

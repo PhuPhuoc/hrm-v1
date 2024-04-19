@@ -17,7 +17,8 @@ import (
 //	@Param			request	body		account.Account_Register	true	"Register request"
 //	@Success		201		{object}	common.success_response		"Created new account successfully"
 //	@Failure		400		{object}	common.error_response		"Create failure"
-//	@Router			/api/v1/register [post]
+//	@Router			/api/v1/account [post]
+// @Security		ApiKeyAuth
 func (c *accountController) handleAccountRegister(rw http.ResponseWriter, req *http.Request) {
 	payload := new(account.Account_Register)
 	registration := account.Account_Register{}

@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"context"
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/base64"
@@ -14,6 +15,12 @@ import (
 
 	"github.com/PhuPhuoc/hrm-v1/common"
 	"github.com/joho/godotenv"
+)
+
+type ContextKey string
+
+const (
+	ContextKeyRole ContextKey = "role"
 )
 
 type JWT struct {
@@ -87,16 +94,7 @@ func verifyJWT(token string) (map[string]interface{}, error) {
 }
 
 func ValidateTokenMiddleware(next http.Handler) http.Handler {
-	excludedURIs := map[string]bool{
-		"/api/v1/register": true,
-		"/api/v1/login":    true,
-	}
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if excludedURIs[r.URL.Path] || strings.HasPrefix(r.URL.Path, "/swagger") {
-			next.ServeHTTP(w, r)
-			return
-		}
-
 		authHeader := r.Header.Get("Authorization")
 
 		if !strings.HasPrefix(authHeader, "Bearer ") {
@@ -121,6 +119,14 @@ func ValidateTokenMiddleware(next http.Handler) http.Handler {
 			}
 			expDateUnix := int64(expDateFloat)
 			if currentUnixTime < expDateUnix {
+				// todo: add context here
+				ctx := r.Context()
+				role, ok := token_payload["role"].(string)
+				if !ok {
+					role = "USER"
+				}
+				ctx = context.WithValue(ctx, ContextKeyRole, role)
+				r = r.WithContext(ctx)
 				next.ServeHTTP(w, r)
 			} else {
 				common.WriteJSON(w, common.ErrorResponse_TokenExpired())

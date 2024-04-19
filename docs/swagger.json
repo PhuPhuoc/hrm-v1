@@ -7,6 +7,78 @@
         "version": "1.0"
     },
     "paths": {
+        "/api/v1/account": {
+            "get": {
+                "description": "role admin: get all account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Account"
+                ],
+                "summary": "get all account",
+                "responses": {
+                    "200": {
+                        "description": "Get all account successful",
+                        "schema": {
+                            "$ref": "#/definitions/common.success_response"
+                        }
+                    },
+                    "400": {
+                        "description": "Get all account failure",
+                        "schema": {
+                            "$ref": "#/definitions/common.error_response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "create new account with user's info",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Account"
+                ],
+                "summary": "register new account",
+                "parameters": [
+                    {
+                        "description": "Register request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/account.Account_Register"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created new account successfully",
+                        "schema": {
+                            "$ref": "#/definitions/common.success_response"
+                        }
+                    },
+                    "400": {
+                        "description": "Create failure",
+                        "schema": {
+                            "$ref": "#/definitions/common.error_response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/login": {
             "post": {
                 "description": "Log in to the account with email and password",
@@ -40,46 +112,6 @@
                     },
                     "400": {
                         "description": "login failure",
-                        "schema": {
-                            "$ref": "#/definitions/common.error_response"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/register": {
-            "post": {
-                "description": "create new account with user's info",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Account"
-                ],
-                "summary": "register new account",
-                "parameters": [
-                    {
-                        "description": "Register request",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/account.Account_Register"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created new account successfully",
-                        "schema": {
-                            "$ref": "#/definitions/common.success_response"
-                        }
-                    },
-                    "400": {
-                        "description": "Create failure",
                         "schema": {
                             "$ref": "#/definitions/common.error_response"
                         }

@@ -27,10 +27,7 @@ func NewServer(addr string, db *sql.DB) *Server {
 }
 
 func (sv *Server) Run() error {
-
 	router := mux.NewRouter()
-	router.Use(middleware.LoggingMiddleware, middleware.ValidateTokenMiddleware)
-
 	router.PathPrefix("/swagger/").Handler(httpSwagger.Handler(
 		httpSwagger.URL("http://localhost:8080/swagger/doc.json"), //The url pointing to API definition
 		httpSwagger.DeepLinking(true),
@@ -45,6 +42,7 @@ func (sv *Server) Run() error {
 	}).Methods("GET")
 
 	subrouter := router.PathPrefix("/api/v1").Subrouter()
+	subrouter.Use(middleware.LoggingMiddleware)
 
 	/* account */
 	account_store := acc_store.NewAccountStore(sv.db)

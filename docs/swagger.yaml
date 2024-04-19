@@ -59,6 +59,52 @@ info:
   title: Human Resources Management System
   version: "1.0"
 paths:
+  /api/v1/account:
+    get:
+      consumes:
+      - application/json
+      description: 'role admin: get all account'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Get all account successful
+          schema:
+            $ref: '#/definitions/common.success_response'
+        "400":
+          description: Get all account failure
+          schema:
+            $ref: '#/definitions/common.error_response'
+      summary: get all account
+      tags:
+      - Account
+    post:
+      consumes:
+      - application/json
+      description: create new account with user's info
+      parameters:
+      - description: Register request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/account.Account_Register'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created new account successfully
+          schema:
+            $ref: '#/definitions/common.success_response'
+        "400":
+          description: Create failure
+          schema:
+            $ref: '#/definitions/common.error_response'
+      security:
+      - ApiKeyAuth: []
+      summary: register new account
+      tags:
+      - Account
   /api/v1/login:
     post:
       consumes:
@@ -83,32 +129,6 @@ paths:
           schema:
             $ref: '#/definitions/common.error_response'
       summary: login to account
-      tags:
-      - Account
-  /api/v1/register:
-    post:
-      consumes:
-      - application/json
-      description: create new account with user's info
-      parameters:
-      - description: Register request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/account.Account_Register'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created new account successfully
-          schema:
-            $ref: '#/definitions/common.success_response'
-        "400":
-          description: Create failure
-          schema:
-            $ref: '#/definitions/common.error_response'
-      summary: register new account
       tags:
       - Account
 securityDefinitions:
