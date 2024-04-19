@@ -25,7 +25,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "account"
+                    "Account"
                 ],
                 "summary": "login to account",
                 "parameters": [
@@ -57,11 +57,6 @@ const docTemplate = `{
         },
         "/api/v1/register": {
             "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "create new account with user's info",
                 "consumes": [
                     "application/json"
@@ -70,12 +65,12 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "account"
+                    "Account"
                 ],
                 "summary": "register new account",
                 "parameters": [
                     {
-                        "description": "Login request",
+                        "description": "Register request",
                         "name": "request",
                         "in": "body",
                         "required": true,
@@ -85,14 +80,14 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "Successful login",
+                    "201": {
+                        "description": "Created new account successfully",
                         "schema": {
                             "$ref": "#/definitions/common.success_response"
                         }
                     },
                     "400": {
-                        "description": "login failure",
+                        "description": "Create failure",
                         "schema": {
                             "$ref": "#/definitions/common.error_response"
                         }
@@ -106,10 +101,14 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "account_role": {
-                    "type": "string",
                     "enum": [
                         "HR",
                         "ADMIN"
+                    ],
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/account.EnumAccountRole"
+                        }
                     ]
                 },
                 "email": {
@@ -125,6 +124,17 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "account.EnumAccountRole": {
+            "type": "string",
+            "enum": [
+                "HR",
+                "ADMIN"
+            ],
+            "x-enum-varnames": [
+                "HR",
+                "ADMIN"
+            ]
         },
         "account.RequestLogin": {
             "type": "object",
@@ -159,7 +169,10 @@ const docTemplate = `{
                 "message": {
                     "type": "string"
                 },
-                "paging": {}
+                "paging": {},
+                "status": {
+                    "type": "integer"
+                }
             }
         }
     },

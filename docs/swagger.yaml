@@ -2,10 +2,11 @@ definitions:
   account.Account_Register:
     properties:
       account_role:
+        allOf:
+        - $ref: '#/definitions/account.EnumAccountRole'
         enum:
         - HR
         - ADMIN
-        type: string
       email:
         type: string
       first_name:
@@ -15,6 +16,14 @@ definitions:
       password:
         type: string
     type: object
+  account.EnumAccountRole:
+    enum:
+    - HR
+    - ADMIN
+    type: string
+    x-enum-varnames:
+    - HR
+    - ADMIN
   account.RequestLogin:
     properties:
       email:
@@ -38,6 +47,8 @@ definitions:
       message:
         type: string
       paging: {}
+      status:
+        type: integer
     type: object
 info:
   contact: {}
@@ -73,14 +84,14 @@ paths:
             $ref: '#/definitions/common.error_response'
       summary: login to account
       tags:
-      - account
+      - Account
   /api/v1/register:
     post:
       consumes:
       - application/json
       description: create new account with user's info
       parameters:
-      - description: Login request
+      - description: Register request
         in: body
         name: request
         required: true
@@ -89,19 +100,17 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
-          description: Successful login
+        "201":
+          description: Created new account successfully
           schema:
             $ref: '#/definitions/common.success_response'
         "400":
-          description: login failure
+          description: Create failure
           schema:
             $ref: '#/definitions/common.error_response'
-      security:
-      - ApiKeyAuth: []
       summary: register new account
       tags:
-      - account
+      - Account
 securityDefinitions:
   ApiKeyAuth:
     in: header

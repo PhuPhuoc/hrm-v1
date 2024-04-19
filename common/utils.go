@@ -15,8 +15,8 @@ func WriteJSON(wr http.ResponseWriter, response any) error {
 		wr.WriteHeader(res.StatusCode)
 	}
 
-	if _, ok := response.(*success_response); ok {
-		wr.WriteHeader(http.StatusOK)
+	if res, ok := response.(*success_response); ok {
+		wr.WriteHeader(res.Status)
 	}
 	return json.NewEncoder(wr).Encode(response)
 }

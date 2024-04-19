@@ -2,7 +2,6 @@ package controller
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -12,14 +11,13 @@ import (
 
 //	@Summary		register new account
 //	@Description	create new account with user's info
-//	@Tags			account
+//	@Tags			Account
 //	@Accept			json
 //	@Produce		json
-//	@Param			request	body		account.Account_Register	true	"Login request"
-//	@Success		200		{object}	common.success_response		"Successful login"
-//	@Failure		400		{object}	common.error_response		"login failure"
+//	@Param			request	body		account.Account_Register	true	"Register request"
+//	@Success		201		{object}	common.success_response		"Created new account successfully"
+//	@Failure		400		{object}	common.error_response		"Create failure"
 //	@Router			/api/v1/register [post]
-//	@Security		ApiKeyAuth
 func (c *accountController) handleAccountRegister(rw http.ResponseWriter, req *http.Request) {
 	payload := new(account.Account_Register)
 	registration := account.Account_Register{}
@@ -31,7 +29,7 @@ func (c *accountController) handleAccountRegister(rw http.ResponseWriter, req *h
 	var bodyData bytes.Buffer
 	_, err := bodyData.ReadFrom(req.Body)
 	if err != nil {
-		common.WriteJSON(rw, common.ErrorResponse_Server(err))
+		common.WriteJSON(rw, common.ErrorResponse_InvalidRequest(err))
 		return
 	}
 
@@ -41,12 +39,15 @@ func (c *accountController) handleAccountRegister(rw http.ResponseWriter, req *h
 	}
 
 	// todo: decode json into payload
-	json.Unmarshal(bodyData.Bytes(), payload)
+	if err_convert := payload.ConvertBodyDataToModel(bodyData.Bytes()); err_convert != nil {
+		common.WriteJSON(rw, common.ErrorResponse_InvalidRequest(err_convert))
+		return
+	}
 
 	// todo: check accout exist or not
 	flag_exist, err_check_exist := c.store.CheckAccountExistByEmail(payload.Email)
 	if err_check_exist != nil {
-		common.WriteJSON(rw, common.ErrorResponse_Server(err_check_exist))
+		common.WriteJSON(rw, common.ErrorResponse_InvalidRequest(err_check_exist))
 		return
 	}
 	if flag_exist {
@@ -57,7 +58,7 @@ func (c *accountController) handleAccountRegister(rw http.ResponseWriter, req *h
 	}
 	// todo: create new accout
 	if err_create_acc := c.store.CreateAccount(payload); err_create_acc != nil {
-		common.WriteJSON(rw, common.ErrorResponse_Server(err_create_acc))
+		common.WriteJSON(rw, common.ErrorResponse_InvalidRequest(err_create_acc))
 		return
 	}
 	common.WriteJSON(rw, common.SuccessResponse_Message("New account registration successful"))
