@@ -5,5 +5,5 @@ type Account_Register struct {
 	LastName    string `json:"last_name"`
 	Email       string `json:"email"`
 	Password    string `json:"password"`
-	AccountRole string `json:"account_role"`
+	AccountRole string `json:"account_role" enums:"HR,ADMIN"`
 }

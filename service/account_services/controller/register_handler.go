@@ -10,6 +10,16 @@ import (
 	"github.com/PhuPhuoc/hrm-v1/model/account"
 )
 
+//	@Summary		register new account
+//	@Description	create new account with user's info
+//	@Tags			account
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		account.Account_Register	true	"Login request"
+//	@Success		200		{object}	common.success_response		"Successful login"
+//	@Failure		400		{object}	common.error_response		"login failure"
+//	@Router			/api/v1/register [post]
+//	@Security		ApiKeyAuth
 func (c *accountController) handleAccountRegister(rw http.ResponseWriter, req *http.Request) {
 	payload := new(account.Account_Register)
 	registration := account.Account_Register{}

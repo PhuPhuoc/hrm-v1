@@ -6,10 +6,12 @@ import (
 	"log"
 	"net/http"
 
+	_ "github.com/PhuPhuoc/hrm-v1/docs"
 	"github.com/PhuPhuoc/hrm-v1/middleware"
 	acc_ctl "github.com/PhuPhuoc/hrm-v1/service/account_services/controller"
 	acc_store "github.com/PhuPhuoc/hrm-v1/service/account_services/store"
 	"github.com/gorilla/mux"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 type Server struct {
@@ -25,9 +27,16 @@ func NewServer(addr string, db *sql.DB) *Server {
 }
 
 func (sv *Server) Run() error {
-	router := mux.NewRouter()
 
+	router := mux.NewRouter()
 	router.Use(middleware.LoggingMiddleware, middleware.ValidateTokenMiddleware)
+
+	router.PathPrefix("/swagger/").Handler(httpSwagger.Handler(
+		httpSwagger.URL("http://localhost:8080/swagger/doc.json"), //The url pointing to API definition
+		httpSwagger.DeepLinking(true),
+		httpSwagger.DocExpansion("none"),
+		httpSwagger.DomID("swagger-ui"),
+	)).Methods(http.MethodGet)
 
 	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")

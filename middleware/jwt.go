@@ -88,11 +88,16 @@ func verifyJWT(token string) (map[string]interface{}, error) {
 
 func ValidateTokenMiddleware(next http.Handler) http.Handler {
 	excludedURIs := map[string]bool{
-		"/api/v1/register": true,
-		"/api/v1/login":    true,
+		//"/api/v1/register": true,
+		"/api/v1/login": true,
 	}
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if excludedURIs[r.URL.Path] {
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		if strings.HasPrefix(r.URL.Path, "/swagger") {
 			next.ServeHTTP(w, r)
 			return
 		}

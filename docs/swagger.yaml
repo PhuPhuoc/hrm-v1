@@ -1,0 +1,110 @@
+definitions:
+  account.Account_Register:
+    properties:
+      account_role:
+        enum:
+        - HR
+        - ADMIN
+        type: string
+      email:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      password:
+        type: string
+    type: object
+  account.RequestLogin:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  common.error_response:
+    properties:
+      log:
+        type: string
+      message:
+        type: string
+      status-code:
+        type: integer
+    type: object
+  common.success_response:
+    properties:
+      data: {}
+      filter: {}
+      message:
+        type: string
+      paging: {}
+    type: object
+info:
+  contact: {}
+  description: |-
+    Human Resource Management (HRM)
+    Server is a comprehensive software or hardware system designed to manage all aspects of personnel-related activities within an organization.
+    It encompasses employee information management, timekeeping, payroll, training and development, performance management, document management, employee interaction, security, compliance.
+  title: Human Resources Management System
+  version: "1.0"
+paths:
+  /api/v1/login:
+    post:
+      consumes:
+      - application/json
+      description: Log in to the account with email and password
+      parameters:
+      - description: Login request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/account.RequestLogin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful login
+          schema:
+            $ref: '#/definitions/common.success_response'
+        "400":
+          description: login failure
+          schema:
+            $ref: '#/definitions/common.error_response'
+      summary: login to account
+      tags:
+      - account
+  /api/v1/register:
+    post:
+      consumes:
+      - application/json
+      description: create new account with user's info
+      parameters:
+      - description: Login request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/account.Account_Register'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful login
+          schema:
+            $ref: '#/definitions/common.success_response'
+        "400":
+          description: login failure
+          schema:
+            $ref: '#/definitions/common.error_response'
+      security:
+      - ApiKeyAuth: []
+      summary: register new account
+      tags:
+      - account
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
