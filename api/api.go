@@ -3,6 +3,7 @@ package api
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -49,7 +50,9 @@ func (sv *Server) Run() error {
 	account_controller := acc_ctl.NewAccooutController(account_store)
 	account_controller.RegisterAccountRouter(subrouter)
 
-	log.Printf("<<>> database has connected successfully & the server is listening at port %v", sv.address)
+	log.Printf("<<>> the server is listening at port %v", sv.address)
+	url := fmt.Sprintf("http://localhost%v/swagger/index.html", sv.address)
+	log.Println("api docs: ", url)
 
 	return http.ListenAndServe(sv.address, router)
 }

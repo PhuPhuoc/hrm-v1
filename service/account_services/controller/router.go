@@ -17,13 +17,11 @@ func NewAccooutController(s account.AccountStore) *accountController {
 }
 
 func (c *accountController) RegisterAccountRouter(r *mux.Router) {
-
-	//r.HandleFunc("/register", c.handleAccountRegister).Methods("POST")
 	r.HandleFunc("/login", c.handleAccountLogin).Methods("POST")
 
 	account_management_router := r.PathPrefix("/account").Subrouter()
 	account_management_router.Use(middleware.ValidateTokenMiddleware, middleware.AuthorizationMiddleware)
-	account_management_router.HandleFunc("", c.handleGetAllAccount).Methods("GET")
-	account_management_router.HandleFunc("", c.handleAccountRegister).Methods("POST")
+	account_management_router.HandleFunc("/get-all", c.handleGetAllAccount).Methods("POST")
+	account_management_router.HandleFunc("/register", c.handleAccountRegister).Methods("POST")
 
 }

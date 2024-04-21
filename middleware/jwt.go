@@ -128,6 +128,7 @@ func ValidateTokenMiddleware(next http.Handler) http.Handler {
 				ctx = context.WithValue(ctx, ContextKeyRole, role)
 				r = r.WithContext(ctx)
 				next.ServeHTTP(w, r)
+				fmt.Printf("{role:%v} _ ", role)
 			} else {
 				common.WriteJSON(w, common.ErrorResponse_TokenExpired())
 				return

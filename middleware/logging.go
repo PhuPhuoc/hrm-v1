@@ -31,7 +31,6 @@ func LoggingMiddleware(next http.Handler) http.Handler {
 		// * response info
 		statusCode := wrappedWriter.statusCode
 		execution_time := time.Since(start)
-
 		fmt.Printf("%s  |%s|  %s  ~  [status/%v]  (%v) \n", formattedTime, method, req_uri, statusCode, execution_time)
 	})
 }

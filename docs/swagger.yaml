@@ -16,6 +16,26 @@ definitions:
       password:
         type: string
     type: object
+  account.AccountFilter:
+    properties:
+      account_role:
+        enum:
+        - HR
+        - ADMIN
+        type: string
+      created_time_from:
+        type: string
+      created_time_to:
+        type: string
+      email:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: integer
+      last_name:
+        type: string
+    type: object
   account.EnumAccountRole:
     enum:
     - HR
@@ -59,25 +79,35 @@ info:
   title: Human Resources Management System
   version: "1.0"
 paths:
-  /api/v1/account:
-    get:
+  /api/v1/account/get-all:
+    post:
       consumes:
       - application/json
-      description: 'role admin: get all account'
+      description: Get all accounts. Requires admin role.
+      parameters:
+      - description: Get all accounts request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/account.AccountFilter'
       produces:
       - application/json
       responses:
         "200":
-          description: Get all account successful
+          description: Get all accounts successful
           schema:
             $ref: '#/definitions/common.success_response'
         "400":
-          description: Get all account failure
+          description: Get all accounts failure
           schema:
             $ref: '#/definitions/common.error_response'
-      summary: get all account
+      security:
+      - ApiKeyAuth: []
+      summary: Get all accounts
       tags:
       - Account
+  /api/v1/account/register:
     post:
       consumes:
       - application/json

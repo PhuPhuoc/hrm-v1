@@ -54,7 +54,7 @@ func (c *accountController) handleAccountLogin(rw http.ResponseWriter, req *http
 	}
 
 	currentTime := time.Now()
-	expirationTime := currentTime.Add(30 * time.Minute)
+	expirationTime := currentTime.Add(120 * time.Minute)
 	expUnix := expirationTime.Unix()
 
 	payload_jwt := map[string]interface{}{

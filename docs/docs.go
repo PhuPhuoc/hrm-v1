@@ -15,9 +15,14 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/account": {
-            "get": {
-                "description": "role admin: get all account",
+        "/api/v1/account/get-all": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get all accounts. Requires admin role.",
                 "consumes": [
                     "application/json"
                 ],
@@ -27,22 +32,35 @@ const docTemplate = `{
                 "tags": [
                     "Account"
                 ],
-                "summary": "get all account",
+                "summary": "Get all accounts",
+                "parameters": [
+                    {
+                        "description": "Get all accounts request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/account.AccountFilter"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "Get all account successful",
+                        "description": "Get all accounts successful",
                         "schema": {
                             "$ref": "#/definitions/common.success_response"
                         }
                     },
                     "400": {
-                        "description": "Get all account failure",
+                        "description": "Get all accounts failure",
                         "schema": {
                             "$ref": "#/definitions/common.error_response"
                         }
                     }
                 }
-            },
+            }
+        },
+        "/api/v1/account/register": {
             "post": {
                 "security": [
                     {
@@ -129,6 +147,36 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "account.AccountFilter": {
+            "type": "object",
+            "properties": {
+                "account_role": {
+                    "type": "string",
+                    "enum": [
+                        "HR",
+                        "ADMIN"
+                    ]
+                },
+                "created_time_from": {
+                    "type": "string"
+                },
+                "created_time_to": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "last_name": {
+                    "type": "string"
+                }
+            }
+        },
         "account.Account_Register": {
             "type": "object",
             "properties": {
