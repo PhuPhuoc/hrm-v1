@@ -29,7 +29,7 @@ func (p *Pagination) Process(page, total string) error {
 		if err != nil {
 			return fmt.Errorf("total is not a number: %v", err)
 		}
-		p.Total_Page = number
+		p.Limit = number
 	}
 	return nil
 }

@@ -8,7 +8,7 @@ import (
 func isEmptyMap(m map[string]interface{}) bool {
 	isEmpty := true
 
-	for _, _ = range m {
+	for range m {
 		isEmpty = false
 		break
 	}
@@ -29,7 +29,7 @@ func GetQueryByFilterObject(filter map[string]interface{}, fields, table string,
 func CreateMainClause(where, fields, table string) string {
 	var query strings.Builder
 	query.WriteString(`select ` + fields + `, cte.total_record` + ` from ` + table)
-	query.WriteString(` cross join cte`)
+	query.WriteString(` cross join cte `)
 	query.WriteString(where)
 	return query.String()
 }
@@ -42,7 +42,7 @@ func CreateWithClause(where, table string) string {
 
 func CreateConditionClause(filter map[string]interface{}, list_field_filter []string) string {
 	var query strings.Builder
-	query.WriteString(` where `)
+	query.WriteString(`where `)
 	if !isEmptyMap(filter) {
 		flag := false
 		for _, key := range list_field_filter {
