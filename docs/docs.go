@@ -35,6 +35,18 @@ const docTemplate = `{
                 "summary": "Get all accounts",
                 "parameters": [
                     {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Total number of items per page",
+                        "name": "total",
+                        "in": "query"
+                    },
+                    {
                         "description": "Get all accounts request",
                         "name": "request",
                         "in": "body",

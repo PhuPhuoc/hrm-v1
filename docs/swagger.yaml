@@ -85,6 +85,14 @@ paths:
       - application/json
       description: Get all accounts. Requires admin role.
       parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Total number of items per page
+        in: query
+        name: total
+        type: integer
       - description: Get all accounts request
         in: body
         name: request

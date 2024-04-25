@@ -19,6 +19,15 @@ func SuccessResponse_Full(status int, paging, filter, data interface{}) *success
 	}
 }
 
+func SuccessResponse_GetObject(paging, filter, data interface{}) *success_response {
+	return &success_response{
+		Status: http.StatusOK,
+		Paging: paging,
+		Filter: filter,
+		Data:   data,
+	}
+}
+
 func SuccessResponse_Data(data interface{}) *success_response {
 	return &success_response{
 		Status: http.StatusOK,
