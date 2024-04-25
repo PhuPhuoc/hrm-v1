@@ -6,19 +6,42 @@ import (
 )
 
 func isEmptyMap(m map[string]interface{}) bool {
-	// Kiểm tra xem slice của map có độ dài khác không
-	// Nếu không, map được coi là trống
-	for _, v := range m {
-		if len(v.([]interface{})) > 0 {
-			return false
-		}
+	isEmpty := true
+
+	for _, _ = range m {
+		isEmpty = false
+		break
 	}
-	return true
+	return isEmpty
 }
 
 func GetQueryByFilterObject(filter map[string]interface{}, fields, table string, list_field_filter []string, page_num, page_total string) string {
 	var query strings.Builder
-	query.WriteString(`select ` + fields + ` from ` + table)
+	where := CreateConditionClause(filter, list_field_filter)
+	part_with := CreateWithClause(where, table)
+	part_main := CreateMainClause(where, fields, table)
+	part_order := CreateOrderClause()
+	part_pagin := CreatePaginationClause(page_num, page_total)
+	query.WriteString(part_with + ` ` + part_main + ` ` + part_order + ` ` + part_pagin)
+	return query.String()
+}
+
+func CreateMainClause(where, fields, table string) string {
+	var query strings.Builder
+	query.WriteString(`select ` + fields + `, cte.total_record` + ` from ` + table)
+	query.WriteString(` cross join cte `)
+	query.WriteString(where)
+	return query.String()
+}
+
+func CreateWithClause(where, table string) string {
+	var query strings.Builder
+	query.WriteString(`with cte as ( select count(*) as total_record from ` + table + ` ` + where + ` )`)
+	return query.String()
+}
+
+func CreateConditionClause(filter map[string]interface{}, list_field_filter []string) string {
+	var query strings.Builder
 	query.WriteString(` where `)
 	if !isEmptyMap(filter) {
 		flag := false
@@ -43,7 +66,17 @@ func GetQueryByFilterObject(filter map[string]interface{}, fields, table string,
 		query.WriteString(` and `)
 	}
 	query.WriteString(`deleted_time is null `)
+	return query.String()
+}
+
+func CreateOrderClause() string {
+	var query strings.Builder
 	query.WriteString(`order by created_time desc`)
+	return query.String()
+}
+
+func CreatePaginationClause(page_num, page_total string) string {
+	var query strings.Builder
 	query.WriteString(` limit ` + page_total)
 	page, _ := strconv.Atoi(page_num)
 	total, _ := strconv.Atoi(page_total)

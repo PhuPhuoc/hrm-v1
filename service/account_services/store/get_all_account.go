@@ -15,7 +15,7 @@ func (store *accountStore) GetAllAccount(filter map[string]interface{}, page_num
 		return nil, pagin, err
 	}
 
-	total_item := 0
+	total_record := 0
 
 	query := common.GetQueryByFilterObject(filter, ACCOUNT_FIELDS, ACCOUNT_TABLE_NAME, ACCOUNT_FILTER, strconv.Itoa(pagin.Current_Page), strconv.Itoa(pagin.Limit))
 	fmt.Println(query)
@@ -27,15 +27,14 @@ func (store *accountStore) GetAllAccount(filter map[string]interface{}, page_num
 
 	for rows.Next() {
 		acc := new(account.Account)
-		err_scan := rows.Scan(&acc.Id, &acc.FirstName, &acc.LastName, &acc.Email, &acc.AccountRole, &acc.CreatedTime)
+		err_scan := rows.Scan(&acc.Id, &acc.FirstName, &acc.LastName, &acc.Email, &acc.AccountRole, &acc.CreatedTime, &total_record)
 		if err_scan != nil {
 			return nil, pagin, err_query
 		}
 		data = append(data, *acc)
-		total_item++
 	}
 
-	pagin.Total_Item = total_item
+	pagin.Total_Item = total_record
 	per := pagin.Total_Item % pagin.Limit
 	if per > 0 {
 		pagin.Total_Page = pagin.Total_Item/pagin.Limit + 1
