@@ -29,7 +29,7 @@ func GetQueryByFilterObject(filter map[string]interface{}, fields, table string,
 func CreateMainClause(where, fields, table string) string {
 	var query strings.Builder
 	query.WriteString(`select ` + fields + `, cte.total_record` + ` from ` + table)
-	query.WriteString(` cross join cte `)
+	query.WriteString(` cross join cte`)
 	query.WriteString(where)
 	return query.String()
 }
@@ -65,7 +65,7 @@ func CreateConditionClause(filter map[string]interface{}, list_field_filter []st
 		}
 		query.WriteString(` and `)
 	}
-	query.WriteString(`deleted_time is null `)
+	query.WriteString(`deleted_time is null`)
 	return query.String()
 }
 
@@ -77,7 +77,7 @@ func CreateOrderClause() string {
 
 func CreatePaginationClause(page_num, page_total string) string {
 	var query strings.Builder
-	query.WriteString(` limit ` + page_total)
+	query.WriteString(`limit ` + page_total)
 	page, _ := strconv.Atoi(page_num)
 	total, _ := strconv.Atoi(page_total)
 	query.WriteString(` offset ` + strconv.Itoa((page-1)*total))
