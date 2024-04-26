@@ -24,15 +24,15 @@ func (c *accountController) handleGetAllAccount(rw http.ResponseWriter, req *htt
 	page := req.URL.Query().Get("page")
 	total := req.URL.Query().Get("total")
 	var bodyData bytes.Buffer
-	_, err := bodyData.ReadFrom(req.Body)
-	if err != nil {
-		common.WriteJSON(rw, common.ErrorResponse_InvalidRequest(err))
+	_, err_readbody := bodyData.ReadFrom(req.Body)
+	if err_readbody != nil {
+		common.WriteJSON(rw, common.ErrorResponse_InvalidRequest(err_readbody))
 		return
 	}
 
 	var param_json_filter map[string]interface{}
-	if err = json.Unmarshal(bodyData.Bytes(), &param_json_filter); err != nil {
-		common.WriteJSON(rw, common.ErrorResponse_InvalidRequest(err))
+	if err_unmarshal := json.Unmarshal(bodyData.Bytes(), &param_json_filter); err_unmarshal != nil {
+		common.WriteJSON(rw, common.ErrorResponse_InvalidRequest(err_unmarshal))
 		return
 	}
 

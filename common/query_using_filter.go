@@ -57,6 +57,14 @@ func CreateConditionClause(filter map[string]interface{}, list_field_filter []st
 				} else if strings.Contains(key, "_to") {
 					result := strings.Replace(key, "_to", "", -1)
 					query.WriteString(result + ` <= ` + `'` + value_filter.(string) + `'`)
+				} else if strings.Contains(strings.ToLower(key), "id") {
+					if floatValue, ok := value_filter.(float64); ok {
+						query.WriteString(`cast(` + key + ` as text)` + ` ilike ` + `'%` + strconv.FormatFloat(floatValue, 'f', -1, 64) + `%'`)
+					} else {
+						query.WriteString(`cast(` + key + ` as text)` + ` ilike ` + `'%` + value_filter.(string) + `%'`)
+					}
+				} else if strings.Contains(strings.ToLower(key), "_role") {
+					query.WriteString(`cast(` + key + ` as text)` + ` ilike ` + `'%` + value_filter.(string) + `%'`)
 				} else {
 					query.WriteString(key + ` ilike ` + `'%` + value_filter.(string) + `%'`)
 				}
