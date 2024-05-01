@@ -17,6 +17,7 @@ func (store *accountStore) GetAllAccount(filter map[string]interface{}, page_num
 	total_record := 0
 
 	query := common.GetQueryByFilterObject(filter, ACCOUNT_FIELDS, ACCOUNT_TABLE_NAME, ACCOUNT_FILTER, strconv.Itoa(pagin.Current_Page), strconv.Itoa(pagin.Limit))
+	//fmt.Println("+ Get All Account Query: ", query)
 	rows, err_query := store.db.Query(query)
 	if err_query != nil {
 		return nil, pagin, err_query
