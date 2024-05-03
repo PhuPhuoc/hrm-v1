@@ -65,7 +65,7 @@ func (sv *Server) Run() error {
 	url_api_doc := fmt.Sprintf("http://localhost%v/swagger/index.html", sv.address)
 	url_login_google := fmt.Sprintf("http://localhost%v/api/v1/auth/oauth", sv.address)
 
-	log.Printf("\n  ~  Server is listening at port  |%v| \n  ~  API docs -  %v \n  ~  URL login with Google -  %v", sv.address, url_api_doc, url_login_google)
+	log.Printf("\n  ~  Server is listening at port  |%v| \n  ~  API docs -  %v \n  ~  URL login with Google -  %v \n<< ... >>\n", sv.address, url_api_doc, url_login_google)
 
 	return http.ListenAndServe(sv.address, router)
 }
