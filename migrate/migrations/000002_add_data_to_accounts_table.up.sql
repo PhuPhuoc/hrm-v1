@@ -3,6 +3,9 @@ INSERT INTO accounts (first_name, last_name, email, password_hash, account_role,
 VALUES ('Phu Phuoc', 'Tran', 'admin', 'b45cffe084dd3d20d928bee85e7b0f21', 'ADMIN', '2024-04-16 16:03:59+00');
 
 INSERT INTO accounts (first_name, last_name, email, password_hash, account_role, created_time) 
+VALUES ('Phu Phuoc', 'Tran', 'blessforwork@gmail.com', 'b45cffe084dd3d20d928bee85e7b0f21', 'ADMIN', '2024-04-16 16:03:59+00');
+
+INSERT INTO accounts (first_name, last_name, email, password_hash, account_role, created_time) 
 VALUES ('John', 'Doe', 'john.doe@example.com', 'b45cffe084dd3d20d928bee85e7b0f21', 'HR', '2024-04-01 12:00:00+00');
 
 INSERT INTO accounts (first_name, last_name, email, password_hash, account_role, created_time) 

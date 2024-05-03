@@ -70,6 +70,17 @@ definitions:
       status:
         type: integer
     type: object
+  oauth.TokenResponse:
+    properties:
+      access_token:
+        type: string
+      expiry:
+        type: string
+      refresh_token:
+        type: string
+      token_type:
+        type: string
+    type: object
 info:
   contact: {}
   description: |-
@@ -143,6 +154,40 @@ paths:
       summary: register new account
       tags:
       - Account
+  /api/v1/auth/login-google-account:
+    post:
+      description: Get user information from Google using OAuth2 token
+      parameters:
+      - description: OAuth2 token
+        in: body
+        name: token
+        required: true
+        schema:
+          $ref: '#/definitions/oauth.TokenResponse'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User information retrieved successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.success_response'
+            - properties:
+                data:
+                  additionalProperties: true
+                  type: object
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.error_response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.error_response'
+      summary: Get user information from Google
+      tags:
+      - Auth
   /api/v1/login:
     post:
       consumes:
