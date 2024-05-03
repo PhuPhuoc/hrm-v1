@@ -9,6 +9,7 @@ require (
 	github.com/lib/pq v1.10.9
 	github.com/swaggo/http-swagger v1.3.4
 	github.com/swaggo/swag v1.16.3
+	golang.org/x/oauth2 v0.19.0
 )
 
 require (
@@ -26,7 +27,6 @@ require (
 	github.com/swaggo/files v1.0.1 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	golang.org/x/net v0.24.0 // indirect
-	golang.org/x/oauth2 v0.19.0 // indirect
 	golang.org/x/tools v0.20.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
